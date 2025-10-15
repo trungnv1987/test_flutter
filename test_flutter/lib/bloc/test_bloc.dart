@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+sealed class TetstBlocEvent {}
+
+final class TestBlocIncrementEvent extends TetstBlocEvent {
+  final int value;
+  TestBlocIncrementEvent({required this.value});
+}
+
+final class TestBlocDecrementEvent extends TetstBlocEvent {
+  final int value;
+  TestBlocDecrementEvent({required this.value});
+}
+
 final class TestState {
   final int value;
   TestState({required this.value});
 
   factory TestState.initial() => TestState(value: 0);
+
+  @override
+  int get hashCode => value.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! TestState) return false;
+    debugPrint('TestState ==: ${other.value}');
+    return other.value == value;
+  }
 }
 
 final class TestCubit extends Cubit<TestState> {
@@ -16,8 +38,8 @@ final class TestCubit extends Cubit<TestState> {
   }
 }
 
-final class BlocWidget extends StatelessWidget {
-  const BlocWidget({super.key});
+final class BlocCubitWidget extends StatelessWidget {
+  const BlocCubitWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +59,50 @@ final class BlocWidget extends StatelessWidget {
         );
       }),
     );
+  }
+}
+
+final class BlocWrapper extends StatelessWidget {
+  const BlocWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+        create: (context) => ValueBloc(),
+        child: Builder(builder: (context) {
+          final bloc = context.watch<ValueBloc>();
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Value: ${bloc.state.value}'),
+              IconButton(
+                onPressed: () => bloc.add(TestBlocIncrementEvent(value: 1)),
+                icon: const Icon(Icons.add),
+              ),
+              IconButton(
+                onPressed: () => bloc.add(TestBlocDecrementEvent(value: 1)),
+                icon: const Icon(Icons.remove),
+              ),
+            ],
+          );
+        }));
+  }
+}
+
+final class ValueBloc extends Bloc<TetstBlocEvent, TestState> {
+  ValueBloc() : super(TestState.initial()) {
+    on<TestBlocIncrementEvent>(_onIncrement);
+    on<TestBlocDecrementEvent>(_onDecrement);
+  }
+
+  Future<void> _onIncrement(
+      TestBlocIncrementEvent event, Emitter<TestState> emit) async {
+    emit(TestState(value: state.value + event.value));
+  }
+
+  Future<void> _onDecrement(
+      TestBlocDecrementEvent event, Emitter<TestState> emit) async {
+    emit(TestState(value: state.value - event.value));
   }
 }
 

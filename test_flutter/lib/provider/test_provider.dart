@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 final class TestProvider extends ChangeNotifier {
-  List<int> _list = [];
+  final List<int> _list = [];
 
   List<int> get list => _list;
 
@@ -10,7 +10,3 @@ final class TestProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-
-
-
