@@ -70,16 +70,22 @@ final class BlocWrapper extends StatelessWidget {
     return BlocProvider(
         create: (context) => ValueBloc(),
         child: Builder(builder: (context) {
-          final bloc = context.watch<ValueBloc>();
+          final bloc = context.read<ValueBloc>();
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Value: ${bloc.state.value}'),
+              BlocBuilder<ValueBloc, TestState>(
+                builder: (context, state) {
+                  return Text('Value: ${state.value}');
+                },
+              ),
               IconButton(
+                key: const Key('add_button'),
                 onPressed: () => bloc.add(TestBlocIncrementEvent(value: 1)),
                 icon: const Icon(Icons.add),
               ),
               IconButton(
+                key: const Key('remove_button'),
                 onPressed: () => bloc.add(TestBlocDecrementEvent(value: 1)),
                 icon: const Icon(Icons.remove),
               ),
