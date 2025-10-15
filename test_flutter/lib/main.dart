@@ -3,10 +3,12 @@ import 'package:provider/provider.dart';
 // import 'bloc/test_bloc.dart';
 import 'bloc/test_bloc.dart';
 import 'provider/test_provider.dart';
+import 'riverpod/riverpod_exam.dart';
 
 void main() {
   // TestCubit.observer = MyBlocObserver();
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(const TestRiverpodApp());
 }
 
 class MyApp extends StatelessWidget {

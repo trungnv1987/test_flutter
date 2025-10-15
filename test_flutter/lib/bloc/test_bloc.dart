@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../common/test_state.dart';
+
 sealed class TetstBlocEvent {}
 
 final class TestBlocIncrementEvent extends TetstBlocEvent {
@@ -11,23 +13,6 @@ final class TestBlocIncrementEvent extends TetstBlocEvent {
 final class TestBlocDecrementEvent extends TetstBlocEvent {
   final int value;
   TestBlocDecrementEvent({required this.value});
-}
-
-final class TestState {
-  final int value;
-  TestState({required this.value});
-
-  factory TestState.initial() => TestState(value: 0);
-
-  @override
-  int get hashCode => value.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    if (other is! TestState) return false;
-    debugPrint('TestState ==: ${other.value}');
-    return other.value == value;
-  }
 }
 
 final class TestCubit extends Cubit<TestState> {
